@@ -12,12 +12,7 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -63,6 +58,20 @@ public class HorseEndpoint {
       HttpStatus status = HttpStatus.NOT_FOUND;
       logClientError(status, "Horse to update not found", e);
       throw new ResponseStatusException(status, e.getMessage(), e);
+    }
+  }
+
+  @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
+  public HorseDetailDto create(@RequestBody HorseDetailDto toCreate) throws ValidationException, ConflictException {
+    LOG.info("POST " + BASE_PATH + "/{}", toCreate);
+    LOG.debug("Body of request:\n{}", toCreate);
+
+    try {
+      return service.create(toCreate);
+    } catch (ValidationException e) {
+      throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
+              "Error during saving horse", e);
     }
   }
 

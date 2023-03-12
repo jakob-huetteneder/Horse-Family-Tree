@@ -6,14 +6,23 @@ import at.ac.tuwien.sepm.assignment.individual.exception.FatalException;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
 import at.ac.tuwien.sepm.assignment.individual.persistence.HorseDao;
 import at.ac.tuwien.sepm.assignment.individual.type.Sex;
+
 import java.lang.invoke.MethodHandles;
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.ZoneId;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+
+
+
 
 @Repository
 public class HorseJdbcDao implements HorseDao {
@@ -29,6 +38,10 @@ public class HorseJdbcDao implements HorseDao {
       + "  , sex = ?"
       + "  , owner_id = ?"
       + " WHERE id = ?";
+
+  private static final String SQL_CREATE = "INSERT INTO " + TABLE_NAME
+          + "(name, description, date_of_birth, sex, owner_id) "
+          + "VALUES (?, ?, ?, ?, ?)";
 
   private final JdbcTemplate jdbcTemplate;
 
@@ -84,6 +97,41 @@ public class HorseJdbcDao implements HorseDao {
         .setOwnerId(horse.ownerId())
         ;
   }
+
+  @Override
+  public Horse create(HorseDetailDto horse) {
+    LOG.trace("create({})", horse);
+
+    GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+    jdbcTemplate.update(con -> {
+      PreparedStatement stmt = con.prepareStatement(SQL_CREATE,
+              Statement.RETURN_GENERATED_KEYS);
+      stmt.setString(1, horse.name());
+      stmt.setString(2, horse.description());
+      stmt.setString(3, horse.dateOfBirth().toString());
+      stmt.setString(4, horse.sex().toString());
+      stmt.setString(5, horse.ownerId() != null ? horse.ownerId().toString() : null);
+      return stmt;
+    }, keyHolder);
+
+    Number key = keyHolder.getKey();
+    if (key == null) {
+      // This should never happen. If it does, something is wrong with the
+      //DB or the way the prepared statement is set up.
+      throw new FatalException("Could not extract key for newly created horse. There is probably a programming error…");
+    }
+
+    return new Horse()
+            .setId(key.longValue())
+            .setName(horse.name())
+            .setDescription(horse.description())
+            .setDateOfBirth(horse.dateOfBirth())
+            .setSex(horse.sex())
+            .setOwnerId(horse.ownerId())
+            ;
+  }
+
+
 
 
   private Horse mapRow(ResultSet result, int rownum) throws SQLException {
