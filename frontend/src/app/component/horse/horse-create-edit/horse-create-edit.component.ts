@@ -13,7 +13,7 @@ import {OwnerService} from 'src/app/service/owner.service';
 export enum HorseCreateEditMode {
   create,
   edit,
-};
+}
 
 @Component({
   selector: 'app-horse-create-edit',
@@ -44,6 +44,8 @@ export class HorseCreateEditComponent implements OnInit {
     switch (this.mode) {
       case HorseCreateEditMode.create:
         return 'Create New Horse';
+      case HorseCreateEditMode.edit:
+        return 'Edit Horse';
       default:
         return '?';
     }
@@ -53,6 +55,8 @@ export class HorseCreateEditComponent implements OnInit {
     switch (this.mode) {
       case HorseCreateEditMode.create:
         return 'Create';
+      case HorseCreateEditMode.edit:
+        return 'Edit';
       default:
         return '?';
     }
@@ -67,6 +71,8 @@ export class HorseCreateEditComponent implements OnInit {
     switch (this.mode) {
       case HorseCreateEditMode.create:
         return 'created';
+      case HorseCreateEditMode.edit:
+        return 'edited';
       default:
         return '?';
     }
@@ -79,6 +85,7 @@ export class HorseCreateEditComponent implements OnInit {
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.mode = data.mode;
+      this.route.params.subscribe(params => this.horse.id = params.id);
     });
   }
 
@@ -109,12 +116,15 @@ export class HorseCreateEditComponent implements OnInit {
         case HorseCreateEditMode.create:
           observable = this.service.create(this.horse);
           break;
+        case HorseCreateEditMode.edit:
+          observable = this.service.edit(this.horse);
+          break;
         default:
           console.error('Unknown HorseCreateEditMode', this.mode);
           return;
       }
       observable.subscribe({
-        next: data => {
+        next: () => {
           this.notification.success(`Horse ${this.horse.name} successfully ${this.modeActionFinished}.`);
           this.router.navigate(['/horses']);
         },

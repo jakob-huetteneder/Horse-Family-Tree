@@ -37,7 +37,7 @@ public class HorseValidator {
       validationErrors.add("Horse sex is not given");
     }
 
-    if (horse.name() == null){
+    if (horse.name() == null) {
       validationErrors.add("Horse name is not given");
     } else {
       if (horse.name().isBlank()) {
@@ -51,7 +51,7 @@ public class HorseValidator {
     if (horse.dateOfBirth() == null) {
       validationErrors.add("Horse date of birth is not given");
     } else {
-      if (horse.dateOfBirth().isAfter(LocalDate.now())){
+      if (horse.dateOfBirth().isAfter(LocalDate.now())) {
         validationErrors.add("Given date of birth is in the future");
       }
     }
@@ -78,7 +78,7 @@ public class HorseValidator {
       validationErrors.add("Horse sex is not given");
     }
 
-    if (horse.name() == null){
+    if (horse.name() == null) {
       validationErrors.add("Horse name is not given");
     } else {
       if (horse.name().isBlank()) {
@@ -92,7 +92,7 @@ public class HorseValidator {
     if (horse.dateOfBirth() == null) {
       validationErrors.add("Horse date of birth is not given");
     } else {
-      if (horse.dateOfBirth().isAfter(LocalDate.now())){
+      if (horse.dateOfBirth().isAfter(LocalDate.now())) {
         validationErrors.add("Given date of birth is in the future");
       }
     }

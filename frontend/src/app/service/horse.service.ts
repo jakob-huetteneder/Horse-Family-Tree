@@ -39,4 +39,11 @@ export class HorseService {
     );
   }
 
+  edit(horse: Horse): Observable<Horse> {
+    return this.http.put<Horse>(
+      baseUri + '/' + horse.id,
+      horse
+    );
+  }
+
 }
