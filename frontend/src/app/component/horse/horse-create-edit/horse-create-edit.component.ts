@@ -87,6 +87,13 @@ export class HorseCreateEditComponent implements OnInit {
       this.mode = data.mode;
       this.route.params.subscribe(params => this.horse.id = params.id);
     });
+    let horseId = 0;
+    this.route.params.subscribe(data => {
+      horseId = data.id;
+    });
+    this.service.getById(horseId).subscribe(data =>{
+      this.horse = data;
+    });
   }
 
   public dynamicCssClassesForInput(input: NgModel): any {
@@ -134,6 +141,18 @@ export class HorseCreateEditComponent implements OnInit {
         }
       });
     }
+  }
+
+  delete(id: number){
+    return this.service.delete(id).subscribe({
+      next: () => {
+        this.notification.success('Horse deleted successfully');
+        this.router.navigate(['horses']);
+      },
+      error: err => {
+        this.notification.error('Deleting failed', err);
+      }
+    });
   }
 
 }

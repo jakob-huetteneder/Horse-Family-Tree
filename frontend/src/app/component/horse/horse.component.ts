@@ -50,4 +50,16 @@ export class HorseComponent implements OnInit {
     return new Date(horse.dateOfBirth).toLocaleDateString();
   }
 
+  delete(id: number){
+    return this.service.delete(id).subscribe({
+      next: () => {
+        this.notification.success('Horse deleted successfully');
+        this.reloadHorses();
+      },
+      error: err => {
+        this.notification.error('Deleting failed', err);
+      }
+    });
+  }
+
 }

@@ -29,6 +29,8 @@ public class HorseJdbcDao implements HorseDao {
   private static final String TABLE_NAME = "horse";
   private static final String SQL_SELECT_ALL = "SELECT * FROM " + TABLE_NAME;
   private static final String SQL_SELECT_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?";
+
+  private static final String SQL_DELETE_BY_ID = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
   private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME
       + " SET name = ?"
       + "  , description = ?"
@@ -129,7 +131,21 @@ public class HorseJdbcDao implements HorseDao {
             ;
   }
 
+  @Override
+  public Horse delete(long id) throws NotFoundException {
+    LOG.trace("delete({})", id);
 
+    List<Horse> horses;
+    horses = jdbcTemplate.query(SQL_SELECT_BY_ID, this::mapRow, id);
+
+    int deletedHorse = jdbcTemplate.update(SQL_DELETE_BY_ID,id);
+
+    if (deletedHorse == 0){
+      throw new NotFoundException("No horse with ID %d found".formatted(id));
+    }
+
+    return horses.get(0);
+  }
 
 
   private Horse mapRow(ResultSet result, int rownum) throws SQLException {

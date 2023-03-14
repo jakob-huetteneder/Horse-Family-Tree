@@ -31,6 +31,8 @@ public interface HorseDao {
 
   Horse create(HorseDetailDto horse);
 
+  Horse delete(long id) throws NotFoundException;
+
   /**
    * Get a horse by its ID from the persistent data store.
    *

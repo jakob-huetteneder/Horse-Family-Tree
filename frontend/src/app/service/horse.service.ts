@@ -46,4 +46,15 @@ export class HorseService {
     );
   }
 
+  getById(id: number): Observable<Horse> {
+    return this.http.get<Horse>(
+      baseUri + '/' + id);
+  }
+
+  delete(id: number){
+    return this.http.delete<Horse>(
+      baseUri + '/' + id
+    );
+  }
+
 }

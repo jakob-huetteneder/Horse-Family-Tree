@@ -43,6 +43,7 @@ public interface HorseService {
   HorseDetailDto create(HorseDetailDto horse) throws ValidationException, ConflictException;
 
 
+  HorseDetailDto delete(long id) throws NotFoundException;
   /**
    * Get the horse with given ID, with more detail information.
    * This includes the owner of the horse, and its parents.

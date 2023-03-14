@@ -118,6 +118,7 @@
     <button type="button"
             class="btn btn-danger"
             *ngIf="!modeIsCreate"
+            (click)="delete(horse.id)"
             >
       <i class="bi bi-trash"></i>
       Delete
@@ -126,7 +127,6 @@
     <button type="submit"
             class="btn btn-primary"
             [disabled]="!form.valid"
-            type="submit"
             >
       {{submitButtonText}}
     </button>
