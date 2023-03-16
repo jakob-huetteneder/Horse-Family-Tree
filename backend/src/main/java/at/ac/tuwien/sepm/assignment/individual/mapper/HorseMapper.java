@@ -24,9 +24,11 @@ public class HorseMapper {
    *
    * @param horse the horse to convert
    * @param owners a map of horse owners by their id, which needs to contain the owner referenced by {@code horse}
+   * @param mother fhd
+   * @param father dfh
    * @return the converted {@link HorseListDto}
    */
-  public HorseListDto entityToListDto(Horse horse, Map<Long, OwnerDto> owners) {
+  public HorseListDto entityToListDto(Horse horse, Map<Long, OwnerDto> owners, HorseDetailDto mother, HorseDetailDto father) {
     LOG.trace("entityToDto({})", horse);
     if (horse == null) {
       return null;
@@ -38,7 +40,9 @@ public class HorseMapper {
         horse.getDescription(),
         horse.getDateOfBirth(),
         horse.getSex(),
-        getOwner(horse, owners)
+        getOwner(horse, owners),
+        mother,
+        father
     );
   }
 
@@ -52,7 +56,7 @@ public class HorseMapper {
    */
   public HorseDetailDto entityToDetailDto(
       Horse horse,
-      Map<Long, OwnerDto> owners) {
+      Map<Long, OwnerDto> owners, HorseDetailDto mother, HorseDetailDto father) {
     LOG.trace("entityToDto({})", horse);
     if (horse == null) {
       return null;
@@ -65,7 +69,9 @@ public class HorseMapper {
         horse.getDescription(),
         horse.getDateOfBirth(),
         horse.getSex(),
-        getOwner(horse, owners)
+        getOwner(horse, owners),
+        mother,
+        father
     );
   }
 

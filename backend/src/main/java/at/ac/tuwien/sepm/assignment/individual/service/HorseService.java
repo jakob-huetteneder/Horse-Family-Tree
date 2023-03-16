@@ -40,7 +40,7 @@ public interface HorseService {
    * @throws ValidationException if the data given for the horse is in itself incorrect (description too long, no name, …)
    * @throws ConflictException if the data given for the horse is in conflict the data currently in the system (owner does not exist, …)
    */
-  HorseDetailDto create(HorseDetailDto horse) throws ValidationException, ConflictException;
+  HorseDetailDto create(HorseDetailDto horse) throws ValidationException, ConflictException, NotFoundException;
 
 
   HorseDetailDto delete(long id) throws NotFoundException;
@@ -54,4 +54,6 @@ public interface HorseService {
    * @throws NotFoundException if the horse with the given ID does not exist in the persistent data store
    */
   HorseDetailDto getById(long id) throws NotFoundException;
+
+  //Stream<HorseListDto> search(HorseSearchDto searchParameters);
 }

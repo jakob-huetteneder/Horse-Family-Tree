@@ -57,4 +57,12 @@ export class HorseService {
     );
   }
 
+  public searchByName(name: string, limitTo: number, sex: Sex): Observable<Horse[]> {
+    const params = new HttpParams()
+      .set('name', name)
+      .set('maxAmount', limitTo)
+      .set('sex', sex);
+    return this.http.get<Horse[]>(baseUri, { params });
+  }
+
 }

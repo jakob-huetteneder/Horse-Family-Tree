@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.assignment.individual.persistence;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDetailDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
+
 import java.util.List;
 
 /**
@@ -41,4 +42,6 @@ public interface HorseDao {
    * @throws NotFoundException if the Horse with the given ID does not exist in the persistent data store
    */
   Horse getById(long id) throws NotFoundException;
+
+  //Collection<Horse> search(HorseSearchDto searchParameters);
 }

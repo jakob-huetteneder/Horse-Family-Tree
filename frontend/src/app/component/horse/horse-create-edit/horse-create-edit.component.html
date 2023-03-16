@@ -97,6 +97,46 @@
     <!-- End sex and owner row -->
   </div>
 
+  <div class="row">
+    <!-- Start mother and father row -->
+    <div class="mb-2 col-lg-6">
+      <div class="row">
+        <label for="mother" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+          Mother
+        </label>
+        <app-autocomplete
+          id="mother"
+          name="mother"
+          class="col-md-10 col-lg-8"
+          textInputClass="form-control"
+          valueNeedsToMatchSuggestion="true"
+          [(ngModel)]="horse.mother"
+          [formatModel]="formatHorseName"
+          [suggestions]="motherSuggestions"
+        ></app-autocomplete>
+      </div>
+    </div>
+
+    <div class="mb-2 col-lg-6">
+      <div class="row">
+        <label for="father" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+          Father
+        </label>
+        <app-autocomplete
+          id="father"
+          name="father"
+          class="col-md-10 col-lg-8"
+          textInputClass="form-control"
+          valueNeedsToMatchSuggestion="true"
+          [(ngModel)]="horse.father"
+          [formatModel]="formatHorseName"
+          [suggestions]="fatherSuggestions"
+        ></app-autocomplete>
+      </div>
+    </div>
+    <!-- End mother and father row -->
+  </div>
+
 
   <div class="row">
     <!-- No row and col-* here. We want this to always span the whole width. -->

@@ -12,7 +12,15 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -32,6 +40,7 @@ public class HorseEndpoint {
     LOG.info("GET " + BASE_PATH);
     LOG.debug("request parameters: {}", searchParameters);
     // TODO We have the request params in the DTO now, but don't do anything with them yet…
+    //return service.search(searchParameters);
     return service.allHorses();
   }
 
@@ -63,7 +72,7 @@ public class HorseEndpoint {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public HorseDetailDto create(@RequestBody HorseDetailDto toCreate) throws ValidationException, ConflictException {
+  public HorseDetailDto create(@RequestBody HorseDetailDto toCreate) throws ValidationException, ConflictException, NotFoundException {
     LOG.info("POST " + BASE_PATH + "/{}", toCreate);
     LOG.debug("Body of request:\n{}", toCreate);
 
@@ -76,7 +85,7 @@ public class HorseEndpoint {
   }
 
   @DeleteMapping("{id}")
-  public HorseDetailDto delete(@PathVariable long id){
+  public HorseDetailDto delete(@PathVariable long id) {
     LOG.info("DELETE " + BASE_PATH + "/{}", id);
     try {
       return service.delete(id);
