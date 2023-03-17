@@ -1,5 +1,12 @@
 
-<h1 class="display-1">{{heading}}</h1>
+<div class="d-flex flex-row w-auto align-items-end">
+  <h1 class="display-1">{{heading}}</h1>
+  <span style="flex: 1"></span>
+  <a class="btn btn-light mb-4" [routerLink]="['../../info', horse.id]" aria-label="Details of Horse">
+    <i class="bi bi-info-lg"></i>
+    Details
+  </a>
+</div>
 
 
 <form #form="ngForm" (ngSubmit)="onSubmit(form)">
