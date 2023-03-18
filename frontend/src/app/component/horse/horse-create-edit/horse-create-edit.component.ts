@@ -149,8 +149,8 @@ export class HorseCreateEditComponent implements OnInit {
           this.router.navigate(['/horses']);
         },
         error: error => {
-          console.error('Error creating horse', error);
-          // TODO show an error message to the user. Include and sensibly present the info from the backend!
+          console.error('Error ' + (this.modeIsCreate ? 'creating Horse' : 'editing Horse'), error);
+          this.notification.error('Error ' + (this.modeIsCreate ? 'creating Horse' : 'editing Horse'), error.error.message);
         }
       });
     }

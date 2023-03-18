@@ -1,0 +1,76 @@
+<h1 class="display-1">Create Owner</h1>
+
+<form #form="ngForm" (ngSubmit)="onSubmit(form)">
+  <div class="row mt-2">
+    <!-- No row and col-* here. We want this to always span the whole width. -->
+    <label for="firstName" class="col-form-label text-md-end text-muted col-md-2">
+      First Name
+    </label>
+    <div class="col-md-9"
+    >
+      <input class="form-control"
+                id="firstName"
+                name="firstName"
+                placeholder="First name"
+                [class]="dynamicCssClassesForInput(ownerFirstNameModel)"
+                [(ngModel)]="owner.firstName"
+                #ownerFirstNameModel="ngModel"
+                required
+      >
+      <div class="invalid-feedback">
+        First Name is required
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-2">
+    <!-- No row and col-* here. We want this to always span the whole width. -->
+    <label for="lastName" class="col-form-label text-md-end text-muted col-md-2">
+      Last Name
+    </label>
+    <div class="col-md-9"
+    >
+      <input class="form-control"
+                id="lastName"
+                name="lastName"
+                placeholder="Last name"
+                [class]="dynamicCssClassesForInput(ownerLastNameModel)"
+                [(ngModel)]="owner.lastName"
+                #ownerLastNameModel="ngModel"
+                required
+      >
+      <div class="invalid-feedback">
+        Last Name is required
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-2">
+    <!-- No row and col-* here. We want this to always span the whole width. -->
+    <label for="email" class="col-form-label text-md-end text-muted col-md-2">
+      Email
+    </label>
+    <div class="col-md-9"
+    >
+      <input class="form-control"
+                id="email"
+                name="email"
+                placeholder="Email"
+                [(ngModel)]="owner.email"
+      >
+    </div>
+  </div>
+
+  <div class="col-md-11">
+    <div class="mt-4 d-flex flex-row">
+      <span class="flex-grow-1"></span>
+      <button type="submit"
+              class="btn btn-primary"
+              [disabled]="!form.valid"
+      >
+        {{'Create'}}
+      </button>
+    </div>
+  </div>
+
+</form>

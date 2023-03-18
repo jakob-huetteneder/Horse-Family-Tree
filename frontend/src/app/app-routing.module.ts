@@ -3,6 +3,8 @@ import {RouterModule, Routes} from '@angular/router';
 import {HorseCreateEditComponent, HorseCreateEditMode} from './component/horse/horse-create-edit/horse-create-edit.component';
 import {HorseComponent} from './component/horse/horse.component';
 import {InfoComponent} from './component/horse/info/info.component';
+import {OwnerComponent} from './component/owner/owner.component';
+import {OwnerCreateComponent} from './component/owner/owner-create/owner-create.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'horses', pathMatch: 'full'},
@@ -12,6 +14,10 @@ const routes: Routes = [
     {path: 'edit/:id', component: HorseCreateEditComponent, data: {mode: HorseCreateEditMode.edit}},
     {path: 'info/:id', component: InfoComponent},
   ]},
+  {path: 'owners', children: [
+      {path: '', component: OwnerComponent},
+      {path: 'create', component: OwnerCreateComponent},
+    ]},
   {path: '**', redirectTo: 'horses'},
 ];
 

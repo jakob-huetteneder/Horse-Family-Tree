@@ -4,7 +4,7 @@
     -->
 <div class="container mt-3 mb-3" *ngIf="bannerError">
   <div class="alert alert-danger" role="alert">
-    <h4>Error!</h4> {{ error }}
+    <h4>Error!</h4> {{ this.bannerError }}
     <p>Could not load horses.</p>
     <p>Something is not quite right. Did you start the backend?</p>
   </div>

@@ -9,7 +9,9 @@ import at.ac.tuwien.sepm.assignment.individual.mapper.OwnerMapper;
 import at.ac.tuwien.sepm.assignment.individual.persistence.OwnerDao;
 import at.ac.tuwien.sepm.assignment.individual.service.OwnerService;
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -63,7 +65,42 @@ public class OwnerServiceImpl implements OwnerService {
   @Override
   public OwnerDto create(OwnerCreateDto newOwner) throws ValidationException {
     LOG.trace("create({})", newOwner);
-    // TODO validation
+    List<String> validationErrors = new ArrayList<>();
+
+    if (newOwner.firstName() == null) {
+      validationErrors.add("Owner first name is not given");
+    } else {
+      if (newOwner.firstName().isBlank()) {
+        validationErrors.add("Owner first name is given but blank");
+      }
+      if (newOwner.firstName().length() > 255) {
+        validationErrors.add("Owner first name too long: longer than 255 characters");
+      }
+    }
+
+    if (newOwner.lastName() == null) {
+      validationErrors.add("Owner last name is not given");
+    } else {
+      if (newOwner.lastName().isBlank()) {
+        validationErrors.add("Owner last name is given but blank");
+      }
+      if (newOwner.lastName().length() > 255) {
+        validationErrors.add("Owner last name too long: longer than 255 characters");
+      }
+    }
+
+    if(newOwner.email() != null){
+      if (newOwner.email().isBlank()) {
+        validationErrors.add("Owner email is given but blank");
+      }
+      if (newOwner.email().length() > 255) {
+        validationErrors.add("Owner email too long: longer than 255 characters");
+      }
+    }
+    if (!validationErrors.isEmpty()) {
+      throw new ValidationException("Validation of owner for create failed", validationErrors);
+    }
+
     return mapper.entityToDto(dao.create(newOwner));
   }
 }

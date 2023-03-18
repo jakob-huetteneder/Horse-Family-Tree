@@ -98,7 +98,7 @@ public class HorseValidator {
     }
 
     if (!validationErrors.isEmpty()) {
-      throw new ValidationException("Validation of horse for update failed", validationErrors);
+      throw new ValidationException("Validation of horse for create failed", validationErrors);
     }
   }
 
