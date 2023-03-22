@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {ToastrService} from 'ngx-toastr';
 import {HorseService} from 'src/app/service/horse.service';
-import {Horse} from '../../dto/horse';
+import {Horse, HorseSearch} from '../../dto/horse';
 import {Owner} from '../../dto/owner';
+import {debounceTime, distinctUntilChanged, Subject} from 'rxjs';
 
 @Component({
   selector: 'app-horse',
@@ -10,9 +11,17 @@ import {Owner} from '../../dto/owner';
   styleUrls: ['./horse.component.scss']
 })
 export class HorseComponent implements OnInit {
-  search = false;
   horses: Horse[] = [];
   bannerError: string | null = null;
+
+  sub = new Subject<any>();
+  searchParams: HorseSearch = {
+    name: undefined,
+    description: undefined,
+    bornBefore: undefined,
+    sex: undefined,
+    owner: undefined,
+  };
 
   constructor(
     private service: HorseService,
@@ -21,13 +30,22 @@ export class HorseComponent implements OnInit {
 
   ngOnInit(): void {
     this.reloadHorses();
+    this.sub.pipe(
+      debounceTime(300),
+      distinctUntilChanged()).subscribe(
+      () => {
+        this.reloadHorses();
+      }
+    );
   }
 
   reloadHorses() {
-    this.service.getAll()
+    console.log('component', this.searchParams.sex);
+    this.service.search(this.searchParams)
       .subscribe({
         next: data => {
           this.horses = data;
+          console.log('data', data);
         },
         error: error => {
           console.error('Error fetching horses', error);

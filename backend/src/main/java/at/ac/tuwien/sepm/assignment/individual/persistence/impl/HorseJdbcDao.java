@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.assignment.individual.persistence.impl;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDetailDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 import at.ac.tuwien.sepm.assignment.individual.exception.FatalException;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
@@ -12,6 +13,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,9 +33,7 @@ public class HorseJdbcDao implements HorseDao {
   private static final String SQL_SELECT_ALL = "SELECT * FROM " + TABLE_NAME;
   private static final String SQL_SELECT_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?";
   private static final String SQL_DELETE_BY_ID = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
-  //private static final String SQL_SELECT_SEARCH = "SELECT * FROM " + TABLE_NAME
-          //+ " WHERE UPPER(first_name||' '||last_name) like UPPER('%'||COALESCE(?, '')||'%')";
-  //private static final String SQL_SELECT_SEARCH_LIMIT_CLAUSE = " LIMIT ?";
+
   private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME
       + " SET name = ?"
       + "  , description = ?"
@@ -77,22 +78,70 @@ public class HorseJdbcDao implements HorseDao {
     return horses.get(0);
   }
 
-  /*
+
   @Override
   public Collection<Horse> search(HorseSearchDto searchParameters) {
     LOG.trace("search({})", searchParameters);
-    var query = SQL_SELECT_SEARCH;
-    var params = new ArrayList<>();
-    params.add(searchParameters.name());
-    var maxAmount = searchParameters.limit();
-    if (maxAmount != null) {
-      query += SQL_SELECT_SEARCH_LIMIT_CLAUSE;
-      params.add(maxAmount);
+    String query = SQL_SELECT_ALL;
+    ArrayList<String> params = new ArrayList<>();
+    boolean first = true;
+
+    if (searchParameters.ownerName() != null && !searchParameters.ownerName().isBlank()) {
+      query += " JOIN owner ON horse.owner_id = owner.id " +
+              "WHERE UPPER(owner.first_name||' '||owner.last_name) like UPPER('%'||COALESCE(?, '')||'%')";
+      params.add(searchParameters.ownerName());
+      first = false;
     }
+
+    if (searchParameters.name() != null && !searchParameters.name().isBlank()) {
+      if (first) {
+        query += " WHERE UPPER(name) like UPPER('%'||COALESCE(?, '')||'%')";
+      } else {
+        query += " AND UPPER(name) like UPPER('%'||COALESCE(?, '')||'%')";
+      }
+      params.add(searchParameters.name());
+      first = false;
+    }
+
+    if (searchParameters.description() != null && !searchParameters.description().isBlank()) {
+      if (first) {
+        query += " WHERE UPPER(description) like UPPER('%'||COALESCE(?, '')||'%')";
+      } else {
+        query += " AND UPPER(description) like UPPER('%'||COALESCE(?, '')||'%')";
+      }
+      params.add(searchParameters.description());
+      first = false;
+    }
+
+    if (searchParameters.bornBefore() != null){
+      if (first){
+        query += " WHERE date_of_birth < ?";
+      } else {
+        query += " AND date_of_birth < ?";
+      }
+      params.add(searchParameters.bornBefore().toString());
+      first = false;
+    }
+
+    if (searchParameters.sex() != null){
+      if (first){
+        query += " WHERE sex = ?";
+      } else {
+        query += " AND sex = ?";
+      }
+      params.add(searchParameters.sex().toString());
+    }
+
+    if (searchParameters.limit() != null){
+
+      query += " LIMIT ?";
+      params.add(searchParameters.limit().toString());
+    }
+
     return jdbcTemplate.query(query, this::mapRow, params.toArray());
   }
 
-   */
+
 
 
   @Override

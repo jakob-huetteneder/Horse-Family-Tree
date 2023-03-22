@@ -1,9 +1,11 @@
 package at.ac.tuwien.sepm.assignment.individual.persistence;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDetailDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -43,5 +45,5 @@ public interface HorseDao {
    */
   Horse getById(long id) throws NotFoundException;
 
-  //Collection<Horse> search(HorseSearchDto searchParameters);
+  Collection<Horse> search(HorseSearchDto searchParameters);
 }

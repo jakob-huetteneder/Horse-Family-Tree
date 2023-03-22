@@ -34,21 +34,25 @@
 <form class="d-flex flex-row w-auto mb-3" (submit)="reloadHorses()">
   <!-- this button is here, just so that simple submitting of this form
        to reload the horses, is possible -->
-  <button type="submit" hidden="true">submit</button>
+  <button type="submit" hidden>submit</button>
   <div class="flex-grow-2">
     <label for="searchHorseName" class="col-form-label">
       Name
     </label>
-    <input type="text" name="searchHorseName"
+    <input id="searchHorseName" type="text" name="searchHorseName"
            class="form-control"
+           [(ngModel)]="searchParams.name"
+           (input)="this.sub.next($event)"
            >
   </div>
   <div class="flex-grow-1 ms-1">
     <label for="searchHorseDescription" class="col-form-label">
       Description
     </label>
-    <input type="text" name="searchHorseDescription"
+    <input id="searchHorseDescription" type="text" name="searchHorseDescription"
            class="form-control"
+           [(ngModel)]="searchParams.description"
+           (input)="this.sub.next($event)"
            >
   </div>
   <div class="ms-1">
@@ -58,18 +62,22 @@
     <!-- pattern and placeholder are fallbacks for browser, that use a simple text input for type="date"
          The date format of the plain HTML date input, in browser that support it is, sadly, not changeable in a cross-browser way
       -->
-    <input type="date" name="searchHorseDateOfBirth"
+    <input id="searchHorseDateOfBirth" type="date" name="searchHorseDateOfBirth"
            pattern="\d{4}-\d{2}-\d{2}"
            placeholder="yyyy-mm-dd"
            class="form-control"
+           [(ngModel)]="searchParams.bornBefore"
+           (input)="this.sub.next($event)"
            >
   </div>
   <div class="ms-1">
     <label for="searchHorseSex" class="col-form-label">
       Sex
     </label>
-    <select name="searchHorseSex"
+    <select id="searchHorseSex" name="searchHorseSex"
             class="form-select"
+            [(ngModel)]="searchParams.sex"
+            (change)="this.sub.next($event)"
             >
       <option></option>
       <option value="FEMALE">Female</option>
@@ -80,11 +88,11 @@
     <label for="searchHorseOwner" class="col-form-label">
       Owner
     </label>
-    <app-autocomplete name="searchHorseOwner"
-                      textInputClass="form-control"
-                      valueNeedsToMatchSuggestion="false"
-                      >
-    </app-autocomplete>
+    <input id="searchHorseOwner" type="text" name="searchHorseName"
+           class="form-control"
+           [(ngModel)]="searchParams.owner"
+           (input)="this.sub.next($event)"
+    >
   </div>
 </form>
 

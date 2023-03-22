@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.assignment.individual.service.impl;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDetailDto;
-import at.ac.tuwien.sepm.assignment.individual.exception.ConflictException;
 import at.ac.tuwien.sepm.assignment.individual.exception.ValidationException;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
@@ -15,8 +14,7 @@ import org.springframework.stereotype.Component;
 public class HorseValidator {
   private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-
-  public void validateForUpdate(HorseDetailDto horse) throws ValidationException, ConflictException {
+  public void validateForUpdate(HorseDetailDto horse) throws ValidationException {
     LOG.trace("validateForUpdate({})", horse);
     List<String> validationErrors = new ArrayList<>();
 
@@ -61,7 +59,7 @@ public class HorseValidator {
     }
   }
 
-  public void validateForCreate(HorseDetailDto horse) throws ValidationException, ConflictException {
+  public void validateForCreate(HorseDetailDto horse) throws ValidationException {
     LOG.trace("validateForCreate({})", horse);
     List<String> validationErrors = new ArrayList<>();
 

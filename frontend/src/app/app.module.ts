@@ -15,6 +15,8 @@ import {HorseComponent} from './component/horse/horse.component';
 import { InfoComponent } from './component/horse/info/info.component';
 import { OwnerComponent } from './component/owner/owner.component';
 import { OwnerCreateComponent } from './component/owner/owner-create/owner-create.component';
+import { FamilyTreeComponent } from './component/horse/family-tree/family-tree.component';
+import { NodeComponent } from './component/horse/family-tree/node/node.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,8 @@ import { OwnerCreateComponent } from './component/owner/owner-create/owner-creat
     InfoComponent,
     OwnerComponent,
     OwnerCreateComponent,
+    FamilyTreeComponent,
+    NodeComponent,
   ],
   imports: [
     BrowserModule,
