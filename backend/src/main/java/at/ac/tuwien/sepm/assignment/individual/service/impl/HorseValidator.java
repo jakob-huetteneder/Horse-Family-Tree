@@ -1,11 +1,15 @@
 package at.ac.tuwien.sepm.assignment.individual.service.impl;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDetailDto;
+import at.ac.tuwien.sepm.assignment.individual.exception.ConflictException;
 import at.ac.tuwien.sepm.assignment.individual.exception.ValidationException;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import at.ac.tuwien.sepm.assignment.individual.type.Sex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -97,6 +101,35 @@ public class HorseValidator {
 
     if (!validationErrors.isEmpty()) {
       throw new ValidationException("Validation of horse for create failed", validationErrors);
+    }
+  }
+
+  public void checkMotherFather(HorseDetailDto horse) throws ConflictException {
+    List<String> errors = new ArrayList<>();
+    if (horse.motherId() != null) {
+      if (horse.mother().sex() != Sex.FEMALE) {
+        errors.add("Mother cannot be Male");
+      }
+      if (horse.mother().dateOfBirth().isAfter(horse.dateOfBirth())) {
+        errors.add("Mother cannot be born after child");
+      }
+      if (Objects.equals(horse.id(), horse.motherId())) {
+        errors.add("A horse cannot be its own mother");
+      }
+    }
+    if (horse.fatherId() != null) {
+      if (horse.father().sex() != Sex.MALE) {
+        errors.add("Father cannot be Female");
+      }
+      if (horse.father().dateOfBirth().isAfter(horse.dateOfBirth())) {
+        errors.add("Father cannot be born after child");
+      }
+      if (Objects.equals(horse.id(), horse.fatherId())) {
+        errors.add("A horse cannot be its own father");
+      }
+    }
+    if (!errors.isEmpty()) {
+      throw new ConflictException("Validation of horse failed", errors);
     }
   }
 

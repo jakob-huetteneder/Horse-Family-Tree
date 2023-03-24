@@ -58,6 +58,17 @@ export class HorseComponent implements OnInit {
       });
   }
 
+  resetHorses() {
+    this.searchParams = {
+      name: undefined,
+      description: undefined,
+      bornBefore: undefined,
+      sex: undefined,
+      owner: undefined,
+    };
+    this.reloadHorses();
+  }
+
   ownerName(owner: Owner | null): string {
     return owner
       ? `${owner.firstName} ${owner.lastName}`

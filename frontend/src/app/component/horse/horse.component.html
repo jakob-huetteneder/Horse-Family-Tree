@@ -20,7 +20,7 @@
 <!-- END SANITY CHECK BANNER -->
 
 <div class="d-flex flex-row w-auto">
-  <button class="btn btn-primary mr-1" (click)="reloadHorses()" aria-label="Reload horses">
+  <button class="btn btn-primary mr-1" (click)="resetHorses()" aria-label="Reload horses">
     <i class="bi bi-arrow-clockwise"></i>
     Reload
   </button>
@@ -119,6 +119,11 @@
                [routerLink]="['info', horse.id]"
                aria-label="Show horse details">
               <i class="bi bi-info-lg"></i>
+            </a>
+            <a class="btn btn-sm responsive-tree-button"
+               [routerLink]="['family-tree', horse.id]"
+               aria-label="Show horse family-tree">
+              <i class="bi bi-list-nested"></i>
             </a>
             <a class="btn btn-sm responsive-warning-button"
                [routerLink]="['edit', horse.id]"

@@ -15,5 +15,8 @@ CREATE TABLE IF NOT EXISTS horse
   sex ENUM('MALE', 'FEMALE') NOT NULL,
   owner_id BIGINT,
   mother_id BIGINT,
-  father_id BIGINT
-);
+  father_id BIGINT,
+  FOREIGN KEY (owner_id) REFERENCES owner (id) ON DELETE SET NULL,
+  FOREIGN KEY (mother_id) REFERENCES horse (id) ON DELETE SET NULL,
+  FOREIGN KEY (father_id) REFERENCES horse (id) ON DELETE SET NULL
+    );

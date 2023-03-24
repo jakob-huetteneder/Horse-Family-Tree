@@ -1,0 +1,42 @@
+
+<div class="d-flex flex-row justify-content-between border border-2 p-3">
+  <div>
+    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="hideParents()">
+      <i [ngClass]="hide ? 'bi bi-chevron-right' : 'bi bi-chevron-down'"></i>
+    </button>
+
+    {{horse.name}}
+
+    <span [ngClass]="horse.sex === 'FEMALE' ? 'bi bi-gender-female' : 'bi bi-gender-male'"></span>
+  </div>
+  <div class="d-inline-flex align-items-center gap-1">
+    {{dateOfBirthAsLocaleDate(horse)}}
+    <div class="btn-group">
+        <a class="btn btn-sm responsive-info-button"
+           [routerLink]="['../../info', horse.id]"
+           aria-label="Show horse details">
+          <i class="bi bi-info-lg"></i>
+        </a>
+        <a class="btn btn-sm responsive-warning-button"
+           [routerLink]="['../../edit', horse.id]"
+           aria-label="Edit horse">
+          <i class="bi bi-pencil"></i>
+        </a>
+        <a class="btn btn-sm responsive-danger-button"
+           (click)="delete(horse.id)"
+           aria-label="Edit horse">
+          <i class="bi bi-trash"></i>
+        </a>
+    </div>
+  </div>
+</div>
+
+<div class="ms-4">
+  <app-horse-family-tree-node *ngIf="(generations > 0)
+  && (horse.mother !== undefined) && (horse.mother !== null) && (!hide)"
+  [generations]="generations-1" [horse]="horse.mother"></app-horse-family-tree-node>
+
+  <app-horse-family-tree-node *ngIf="(generations > 0) &&
+  (horse.father !== undefined) && (horse.father !== null) && (!hide)"
+  [generations]="generations-1" [horse]="horse.father"></app-horse-family-tree-node>
+</div>

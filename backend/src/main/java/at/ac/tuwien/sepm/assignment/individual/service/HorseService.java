@@ -39,7 +39,7 @@ public interface HorseService {
    * @param horse the horse to create
    * @return the created horse
    * @throws ValidationException if the data given for the horse is in itself incorrect (description too long, no name, …)
-   * @throws ConflictException if the data given for the horse is in conflict the data currently in the system (owner does not exist, …)
+   * @throws ConflictException if the data given for the horse is in conflict with the data currently in the system (owner does not exist, …)
    */
   HorseDetailDto create(HorseDetailDto horse) throws ValidationException, ConflictException, NotFoundException;
 

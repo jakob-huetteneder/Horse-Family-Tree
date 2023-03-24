@@ -14,11 +14,12 @@ import at.ac.tuwien.sepm.assignment.individual.persistence.HorseDao;
 import at.ac.tuwien.sepm.assignment.individual.service.HorseService;
 import at.ac.tuwien.sepm.assignment.individual.service.OwnerService;
 import java.lang.invoke.MethodHandles;
-import java.util.*;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import at.ac.tuwien.sepm.assignment.individual.type.Sex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -67,11 +68,7 @@ public class HorseServiceImpl implements HorseService {
   public HorseDetailDto update(HorseDetailDto horse) throws NotFoundException, ValidationException, ConflictException {
     LOG.trace("update({})", horse);
     validator.validateForUpdate(horse);
-    List<String> errors = checkMotherFather(horse);
-
-    if (!errors.isEmpty()) {
-      throw new ConflictException("Validation of horse for update failed", errors);
-    }
+    validator.checkMotherFather(horse);
 
     var updatedHorse = dao.update(horse);
     return mapper.entityToDetailDto(
@@ -86,11 +83,7 @@ public class HorseServiceImpl implements HorseService {
   public HorseDetailDto create(HorseDetailDto horse) throws ValidationException, ConflictException, NotFoundException {
     LOG.trace("create({})", horse);
     validator.validateForCreate(horse);
-    List<String> errors = checkMotherFather(horse);
-
-    if (!errors.isEmpty()) {
-      throw new ConflictException("Validation of horse for create failed", errors);
-    }
+    validator.checkMotherFather(horse);
 
     var createdHorse = dao.create(horse);
     return mapper.entityToDetailDto(
@@ -100,34 +93,7 @@ public class HorseServiceImpl implements HorseService {
             getFather(createdHorse));
   }
 
-  private List<String> checkMotherFather(HorseDetailDto horse) throws NotFoundException{
-    List<String> errors = new ArrayList<>();
-    if (horse.motherId() != null){
-      HorseDetailDto mother = getById(horse.motherId());
-      if (mother.sex() != Sex.FEMALE){
-        errors.add("Mother cannot be Male");
-      }
-      if (mother.dateOfBirth().isAfter(horse.dateOfBirth())){
-        errors.add("Mother cannot be born after child");
-      }
-      if (Objects.equals(horse.id(), horse.motherId())){
-        errors.add("A horse cannot be its own mother");
-      }
-    }
-    if (horse.fatherId() != null){
-      HorseDetailDto father = getById(horse.fatherId());
-      if (father.sex() != Sex.MALE){
-        errors.add("Father cannot be Female");
-      }
-      if (father.dateOfBirth().isAfter(horse.dateOfBirth())){
-        errors.add("Father cannot be born after child");
-      }
-      if (Objects.equals(horse.id(), horse.fatherId())){
-        errors.add("A horse cannot be its own father");
-      }
-    }
-    return errors;
-  }
+
 
   @Override
   public HorseDetailDto delete(long id) throws NotFoundException {

@@ -87,8 +87,8 @@ public class HorseJdbcDao implements HorseDao {
     boolean first = true;
 
     if (searchParameters.ownerName() != null && !searchParameters.ownerName().isBlank()) {
-      query += " JOIN owner ON horse.owner_id = owner.id " +
-              "WHERE UPPER(owner.first_name||' '||owner.last_name) like UPPER('%'||COALESCE(?, '')||'%')";
+      query += " JOIN owner ON horse.owner_id = owner.id "
+              + "WHERE UPPER(owner.first_name||' '||owner.last_name) like UPPER('%'||COALESCE(?, '')||'%')";
       params.add(searchParameters.ownerName());
       first = false;
     }
@@ -113,8 +113,8 @@ public class HorseJdbcDao implements HorseDao {
       first = false;
     }
 
-    if (searchParameters.bornBefore() != null){
-      if (first){
+    if (searchParameters.bornBefore() != null) {
+      if (first) {
         query += " WHERE date_of_birth < ?";
       } else {
         query += " AND date_of_birth < ?";
@@ -123,8 +123,8 @@ public class HorseJdbcDao implements HorseDao {
       first = false;
     }
 
-    if (searchParameters.sex() != null){
-      if (first){
+    if (searchParameters.sex() != null) {
+      if (first) {
         query += " WHERE sex = ?";
       } else {
         query += " AND sex = ?";
@@ -132,7 +132,7 @@ public class HorseJdbcDao implements HorseDao {
       params.add(searchParameters.sex().toString());
     }
 
-    if (searchParameters.limit() != null){
+    if (searchParameters.limit() != null) {
 
       query += " LIMIT ?";
       params.add(searchParameters.limit().toString());
