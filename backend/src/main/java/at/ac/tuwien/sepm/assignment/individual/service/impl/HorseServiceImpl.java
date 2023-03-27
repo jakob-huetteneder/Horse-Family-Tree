@@ -14,7 +14,9 @@ import at.ac.tuwien.sepm.assignment.individual.persistence.HorseDao;
 import at.ac.tuwien.sepm.assignment.individual.service.HorseService;
 import at.ac.tuwien.sepm.assignment.individual.service.OwnerService;
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -69,6 +71,26 @@ public class HorseServiceImpl implements HorseService {
     LOG.trace("update({})", horse);
     validator.validateForUpdate(horse);
     validator.checkMotherFather(horse);
+    List<Horse> children = dao.getChildren(horse.id());
+    List<String> error = new ArrayList<>();
+
+
+    HorseDetailDto oldHorse = getById(horse.id());
+    if (oldHorse.sex() != horse.sex()) {
+      if (!children.isEmpty()) {
+        error.add("Cant change sex if the horse has children");
+      }
+    }
+    for (Horse c :
+            children) {
+      if (horse.dateOfBirth().isAfter(c.getDateOfBirth())) {
+        error.add("Horse would be born after one or more children");
+      }
+    }
+
+    if (!error.isEmpty()) {
+      throw new ConflictException("Validation of horse for update failed", error);
+    }
 
     var updatedHorse = dao.update(horse);
     return mapper.entityToDetailDto(

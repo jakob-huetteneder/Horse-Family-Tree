@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.assignment.individual.persistence;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDetailDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
+import at.ac.tuwien.sepm.assignment.individual.exception.ConflictException;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
 
 import java.util.Collection;
@@ -32,7 +33,7 @@ public interface HorseDao {
    */
   Horse update(HorseDetailDto horse) throws NotFoundException;
 
-  Horse create(HorseDetailDto horse);
+  Horse create(HorseDetailDto horse) throws ConflictException;
 
   Horse delete(long id) throws NotFoundException;
 
@@ -46,4 +47,7 @@ public interface HorseDao {
   Horse getById(long id) throws NotFoundException;
 
   Collection<Horse> search(HorseSearchDto searchParameters);
+
+  List<Horse> getChildren(Long id);
+
 }

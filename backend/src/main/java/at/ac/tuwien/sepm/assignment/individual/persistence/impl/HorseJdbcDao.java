@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.assignment.individual.persistence.impl;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDetailDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
+import at.ac.tuwien.sepm.assignment.individual.exception.ConflictException;
 import at.ac.tuwien.sepm.assignment.individual.exception.FatalException;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
 import at.ac.tuwien.sepm.assignment.individual.persistence.HorseDao;
@@ -141,7 +142,17 @@ public class HorseJdbcDao implements HorseDao {
     return jdbcTemplate.query(query, this::mapRow, params.toArray());
   }
 
+  public List<Horse> getChildren(Long id) {
+    LOG.trace("getChildren({})", id);
+    String query = SQL_SELECT_ALL;
+    query += " WHERE father_id = ? OR mother_id = ?";
+    Object[] arr = {id, id};
 
+    List<Horse> horses;
+    horses = jdbcTemplate.query(query, this::mapRow, arr);
+
+    return horses;
+  }
 
 
   @Override
@@ -174,8 +185,15 @@ public class HorseJdbcDao implements HorseDao {
   }
 
   @Override
-  public Horse create(HorseDetailDto horse) {
+  public Horse create(HorseDetailDto horse) throws ConflictException {
     LOG.trace("create({})", horse);
+    List<String> error = new ArrayList<>();
+
+    List<Horse> list = jdbcTemplate.query(SQL_SELECT_BY_ID, this::mapRow, horse.id());
+    if (!list.isEmpty()) {
+      error.add("No horse with ID %d found".formatted(horse.id()));
+      throw new ConflictException("Creating horse failed", error);
+    }
 
     GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
     jdbcTemplate.update(con -> {

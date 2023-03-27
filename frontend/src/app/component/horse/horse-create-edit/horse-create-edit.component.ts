@@ -91,17 +91,19 @@ export class HorseCreateEditComponent implements OnInit {
     : this.service.searchByName(input, 5, Sex.male);
 
   ngOnInit(): void {
-    this.route.data.subscribe(data => {
-      this.mode = data.mode;
-      this.route.params.subscribe(params => this.horse.id = params.id);
-    });
-    let horseId = 0;
-    this.route.params.subscribe(data => {
-      horseId = data.id;
-    });
-    this.service.getById(horseId).subscribe(data =>{
-      this.horse = data;
-    });
+    if (!this.modeIsCreate) {
+      this.route.data.subscribe(data => {
+        this.mode = data.mode;
+        this.route.params.subscribe(params => this.horse.id = params.id);
+      });
+      let horseId = 0;
+      this.route.params.subscribe(data => {
+        horseId = data.id;
+      });
+      this.service.getById(horseId).subscribe(data => {
+        this.horse = data;
+      });
+    }
   }
 
   public dynamicCssClassesForInput(input: NgModel): any {
@@ -150,7 +152,8 @@ export class HorseCreateEditComponent implements OnInit {
         },
         error: error => {
           console.error('Error ' + (this.modeIsCreate ? 'creating Horse' : 'editing Horse'), error);
-          this.notification.error('Error ' + (this.modeIsCreate ? 'creating Horse' : 'editing Horse'), error.error.message);
+          //this.notification.error('Error ' + (this.modeIsCreate ? 'creating Horse' : 'editing Horse'), error.error.message);
+          this.notification.error(error.error.errors, error.error.message);
         }
       });
     }
@@ -163,7 +166,7 @@ export class HorseCreateEditComponent implements OnInit {
         this.router.navigate(['horses']);
       },
       error: err => {
-        this.notification.error('Deleting failed', err);
+        this.notification.error(err.error.errors, err.error.message);
       }
     });
   }
