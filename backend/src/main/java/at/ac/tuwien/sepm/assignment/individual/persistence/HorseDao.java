@@ -33,8 +33,24 @@ public interface HorseDao {
    */
   Horse update(HorseDetailDto horse) throws NotFoundException;
 
+  /**
+   * Creates a new horse with the data given in {@code horse}
+   * in the persistent data store.
+   *
+   * @param horse the horse to create
+   * @return the created horse
+   * @throws ConflictException if the data given for the horse is in conflict with the data currently in the system (owner does not exist, …)
+   */
   Horse create(HorseDetailDto horse) throws ConflictException;
 
+  /**
+   * Delete the horse with given ID from the
+   * persistent data store.
+   *
+   * @param id the ID of the horse to delete.
+   * @return the deleted horse with ID {@code id}
+   * @throws NotFoundException if the horse with given ID does not exist in the persistent data store
+   */
   Horse delete(long id) throws NotFoundException;
 
   /**
@@ -46,8 +62,22 @@ public interface HorseDao {
    */
   Horse getById(long id) throws NotFoundException;
 
+  /**
+   * Search horses that match the given parameters in the
+   * persistent data store.
+   *
+   * @param searchParameters parameters to search horses by
+   * @return Collection of horses which match with the parameters
+   */
   Collection<Horse> search(HorseSearchDto searchParameters);
 
+  /**
+   * Get all children of the horse with ID {@code id}
+   * from the persistent data store.
+   *
+   * @param id id of the horse to get the children of
+   * @return list of children of the horse with ID {@code id}
+   */
   List<Horse> getChildren(Long id);
 
 }
