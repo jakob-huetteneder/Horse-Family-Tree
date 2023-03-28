@@ -49,7 +49,7 @@ public interface OwnerService {
    *
    * @param newOwner the data for the new owner
    * @return the owner, that was just newly created in the persistent data store
-   * @throws ValidationException if the
+   * @throws ValidationException if the data given for the owner is in itself incorrect (description too long, no name, …)
    */
   OwnerDto create(OwnerCreateDto newOwner) throws ValidationException;
 }
