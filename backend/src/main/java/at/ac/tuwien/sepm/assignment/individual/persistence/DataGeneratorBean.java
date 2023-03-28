@@ -36,4 +36,12 @@ public class DataGeneratorBean {
       LOGGER.info("Finished generating data without error.");
     }
   }
+
+  public void cleanData() throws SQLException {
+    LOGGER.info("Cleaning data…");
+    try (var connection = dataSource.getConnection()) {
+      ScriptUtils.executeSqlScript(connection, new ClassPathResource("sql/delete.sql"));
+      LOGGER.info("Finished cleaning up data without error.");
+    }
+  }
 }

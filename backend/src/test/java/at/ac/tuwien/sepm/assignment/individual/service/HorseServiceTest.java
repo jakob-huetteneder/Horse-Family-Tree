@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +38,16 @@ public class HorseServiceTest {
     bean.generateData();
   }
 
+  @AfterEach
+  public void cleanup() throws SQLException {
+    bean.cleanData();
+  }
+
   @Test
   public void getAllReturnsAllStoredHorses() {
     List<HorseListDto> horses = horseService.allHorses()
         .toList();
-    assertThat(horses.size()).isGreaterThanOrEqualTo(7); // TODO adapt to exact number of elements in test data later
+    assertThat(horses.size()).isGreaterThanOrEqualTo(10);
     assertThat(horses)
         .map(HorseListDto::id, HorseListDto::sex)
         .contains(tuple(-1L, Sex.FEMALE));
@@ -77,7 +83,7 @@ public class HorseServiceTest {
 
   @Test
   public void searchReturnsRightHorse() {
-    HorseSearchDto searchParams = new HorseSearchDto("Ca",
+    HorseSearchDto searchParams = new HorseSearchDto("Carlo",
             null,
             null,
             Sex.MALE,
@@ -86,7 +92,8 @@ public class HorseServiceTest {
     List<HorseListDto> horses = horseService.search(searchParams).toList();
     assertThat(horses)
             .isNotNull()
-            .map(HorseListDto::id, HorseListDto::name, HorseListDto::description, HorseListDto::dateOfBirth, HorseListDto::sex)
+            .map(HorseListDto::id, HorseListDto::name, HorseListDto::description, HorseListDto::dateOfBirth,
+                    HorseListDto::sex)
             .contains(tuple(-3L, "Carlo", "Description 2", LocalDate.of(2016, 4, 14), Sex.MALE));
   }
 

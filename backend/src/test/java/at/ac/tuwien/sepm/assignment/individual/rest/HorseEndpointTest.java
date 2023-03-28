@@ -13,6 +13,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +50,11 @@ public class HorseEndpointTest {
     bean.generateData();
   }
 
+  @AfterEach
+  public void cleanup() throws SQLException {
+    bean.cleanData();
+  }
+
   @Test
   public void gettingAllHorses() throws Exception {
     byte[] body = mockMvc
@@ -60,7 +67,7 @@ public class HorseEndpointTest {
     List<HorseListDto> horseResult = objectMapper.readerFor(HorseListDto.class).<HorseListDto>readValues(body).readAll();
 
     assertThat(horseResult).isNotNull();
-    assertThat(horseResult.size()).isGreaterThanOrEqualTo(7); // TODO adapt this to the exact number in the test data later
+    assertThat(horseResult.size()).isGreaterThanOrEqualTo(10);
     assertThat(horseResult)
         .extracting(HorseListDto::id, HorseListDto::name)
         .contains(tuple(-1L, "Wendy"));
@@ -89,6 +96,7 @@ public class HorseEndpointTest {
                     .content(objectMapper.writeValueAsBytes(horse))
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isUnprocessableEntity());
+
   }
 
 
@@ -97,25 +105,41 @@ public class HorseEndpointTest {
     HorseDetailDto horse = new HorseDetailDto(null,
             "Juan",
             null,
-            LocalDate.now(),
+            LocalDate.of(2014, 12, 12),
             Sex.MALE,
             null,
             null,
             null);
-    mockMvc
+    byte[] body = mockMvc
             .perform(MockMvcRequestBuilders
                     .post("/horses")
                     .content(objectMapper.writeValueAsBytes(horse))
                     .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isCreated());
+            .andExpect(status().isCreated())
+            .andReturn().getResponse().getContentAsByteArray();
+
+    List<HorseListDto> horseResult = objectMapper.readerFor(HorseListDto.class).<HorseListDto>readValues(body).readAll();
+
+    assertThat(horseResult).isNotNull();
+    assertThat(horseResult)
+            .extracting(HorseListDto::name, HorseListDto::dateOfBirth, HorseListDto::sex)
+            .contains(tuple(horse.name(), horse.dateOfBirth(), horse.sex()));
   }
 
   @Test
   public void gettingExistingUrlReturns200() throws Exception {
-    mockMvc
+    byte[] body = mockMvc
             .perform(MockMvcRequestBuilders
                     .get("/horses/-1")
-            ).andExpect(status().isOk());
+            ).andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsByteArray();
+
+    List<HorseListDto> horseResult = objectMapper.readerFor(HorseListDto.class).<HorseListDto>readValues(body).readAll();
+
+    assertThat(horseResult).isNotNull();
+    assertThat(horseResult)
+            .extracting(HorseListDto::id, HorseListDto::name, HorseListDto::description, HorseListDto::dateOfBirth, HorseListDto::sex, HorseListDto::mother)
+            .contains(tuple(-1L, "Wendy", "The famous one!", LocalDate.of(2012, 12, 12), Sex.FEMALE, null));
   }
 
   @Test

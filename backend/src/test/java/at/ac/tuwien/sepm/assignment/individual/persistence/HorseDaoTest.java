@@ -15,6 +15,7 @@ import java.util.List;
 import at.ac.tuwien.sepm.assignment.individual.exception.ConflictException;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
 import at.ac.tuwien.sepm.assignment.individual.type.Sex;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +36,15 @@ public class HorseDaoTest {
     bean.generateData();
   }
 
+  @AfterEach
+  public void cleanup() throws SQLException {
+    bean.cleanData();
+  }
+
   @Test
   public void getAllReturnsAllStoredHorses() {
     List<Horse> horses = horseDao.getAll();
-    assertThat(horses.size()).isGreaterThanOrEqualTo(7); // TODO adapt to exact number of elements in test data later
+    assertThat(horses.size()).isGreaterThanOrEqualTo(10);
     assertThat(horses)
         .extracting(Horse::getId, Horse::getName)
         .contains(tuple(-1L, "Wendy"));
@@ -47,7 +53,7 @@ public class HorseDaoTest {
   @Test
   public void getByIdWithNonExistingIdThrowsNotFoundException() {
     assertThrows(NotFoundException.class,
-            () -> horseDao.getById(-10L));
+            () -> horseDao.getById(-15L));
   }
 
   @Test
@@ -89,6 +95,21 @@ public class HorseDaoTest {
 
   }
 
-
+  @Test
+  public void createWithRightParametersReturnsCreatedHorse() throws Exception {
+    HorseDetailDto horse = new HorseDetailDto(null,
+            "Juan",
+            null,
+            LocalDate.of(2014, 12, 12),
+            Sex.MALE,
+            null,
+            null,
+            null);
+    var created = horseDao.create(horse);
+    assertThat(created)
+            .isNotNull()
+            .extracting(Horse::getName, Horse::getDateOfBirth, Horse::getSex)
+            .contains(horse.name(), horse.dateOfBirth(), horse.sex());
+  }
 
 }
