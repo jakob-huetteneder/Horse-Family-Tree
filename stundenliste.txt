@@ -1,0 +1,20 @@
+Jakob Hütteneder - 12123666 - total hours: 96
+
+10.03.2023 - 5 Stunden - US1
+12.03.2023 - 7 Stunden - US1 & US2
+13.03.2023 - 6 Stunden - US2 & US3
+14.03.2023 - 7 Stunden - US3 & US4
+15.03.2023 - 7 Stunden - US4
+16.03.2023 - 6 Stunden - US4 & US5
+17.03.2023 - 2 Stunden - US5
+18.03.2023 - 6 Stunden - US7 & US8
+19.03.2023 - 7 Stunden - US6
+21.03.2023 - 1 Stunde  - US6
+22.03.2023 - 7 Stunden - US6 & 4
+23.03.2023 - 6 Stunden - US9
+24.03.2023 - 7 Stunden - US9
+25.03.2023 - 6 Stunden - US9
+26.03.2023 - 7 Stunden - Tests, Exceptionhandler, additional validations
+27.03.2023 - 7 Stunden - additional validations, checking the program in respect
+			 to the techstories
+28.03.2023 - 2 Stunden - additional Test data
