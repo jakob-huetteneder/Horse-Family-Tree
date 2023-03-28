@@ -105,31 +105,31 @@ public class HorseValidator {
   }
 
   public void checkMotherFather(HorseDetailDto horse) throws ConflictException {
-    List<String> errors = new ArrayList<>();
+    List<String> conflictErrors = new ArrayList<>();
     if (horse.motherId() != null) {
       if (horse.mother().sex() != Sex.FEMALE) {
-        errors.add("Mother cannot be Male");
+        conflictErrors.add("Mother cannot be Male");
       }
       if (horse.mother().dateOfBirth().isAfter(horse.dateOfBirth())) {
-        errors.add("Mother cannot be born after child");
+        conflictErrors.add("Mother cannot be born after child");
       }
       if (Objects.equals(horse.id(), horse.motherId())) {
-        errors.add("A horse cannot be its own mother");
+        conflictErrors.add("A horse cannot be its own mother");
       }
     }
     if (horse.fatherId() != null) {
       if (horse.father().sex() != Sex.MALE) {
-        errors.add("Father cannot be Female");
+        conflictErrors.add("Father cannot be Female");
       }
       if (horse.father().dateOfBirth().isAfter(horse.dateOfBirth())) {
-        errors.add("Father cannot be born after child");
+        conflictErrors.add("Father cannot be born after child");
       }
       if (Objects.equals(horse.id(), horse.fatherId())) {
-        errors.add("A horse cannot be its own father");
+        conflictErrors.add("A horse cannot be its own father");
       }
     }
-    if (!errors.isEmpty()) {
-      throw new ConflictException("Validation of horse failed", errors);
+    if (!conflictErrors.isEmpty()) {
+      throw new ConflictException("Validation of horse failed", conflictErrors);
     }
   }
 

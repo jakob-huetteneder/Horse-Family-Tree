@@ -72,24 +72,25 @@ public class HorseServiceImpl implements HorseService {
     validator.validateForUpdate(horse);
     validator.checkMotherFather(horse);
     List<Horse> children = dao.getChildren(horse.id());
-    List<String> error = new ArrayList<>();
+    List<String> conflictErrors = new ArrayList<>();
 
 
     HorseDetailDto oldHorse = getById(horse.id());
     if (oldHorse.sex() != horse.sex()) {
       if (!children.isEmpty()) {
-        error.add("Cant change sex if the horse has children");
+        conflictErrors.add("Cant change sex if the horse has children");
       }
     }
     for (Horse c :
             children) {
       if (horse.dateOfBirth().isAfter(c.getDateOfBirth())) {
-        error.add("Horse would be born after one or more children");
+        conflictErrors.add("Horse cannot be born after one or more children");
       }
     }
+    conflictErrors.addAll(checkIfMotherFatherOwnerExists(horse));
 
-    if (!error.isEmpty()) {
-      throw new ConflictException("Validation of horse for update failed", error);
+    if (!conflictErrors.isEmpty()) {
+      throw new ConflictException("Validation of horse for update failed", conflictErrors);
     }
 
     var updatedHorse = dao.update(horse);
@@ -106,6 +107,11 @@ public class HorseServiceImpl implements HorseService {
     LOG.trace("create({})", horse);
     validator.validateForCreate(horse);
     validator.checkMotherFather(horse);
+    List<String> conflictErrors = checkIfMotherFatherOwnerExists(horse);
+
+    if (!conflictErrors.isEmpty()) {
+      throw new ConflictException("Validation of horse for update failed", conflictErrors);
+    }
 
     var createdHorse = dao.create(horse);
     return mapper.entityToDetailDto(
@@ -186,7 +192,31 @@ public class HorseServiceImpl implements HorseService {
     return horse.getFatherId() == null ? null : getById(horse.getFatherId());
   }
 
-
+  private List<String> checkIfMotherFatherOwnerExists(HorseDetailDto horse) {
+    List<String> errors = new ArrayList<>();
+    if (horse.ownerId() != null) {
+      try {
+        ownerService.getById(horse.ownerId());
+      } catch (NotFoundException e) {
+        errors.add("Given owner does not exist");
+      }
+    }
+    if (horse.motherId() != null) {
+      try {
+        getById(horse.motherId());
+      } catch (NotFoundException e) {
+        errors.add("Given mother does not exist");
+      }
+    }
+    if (horse.fatherId() != null) {
+      try {
+        getById(horse.fatherId());
+      } catch (NotFoundException e) {
+        errors.add("Given father does not exist");
+      }
+    }
+    return errors;
+  }
 
 
 }
