@@ -3,8 +3,7 @@ import {ToastrService} from 'ngx-toastr';
 import {HorseService} from 'src/app/service/horse.service';
 import {Horse, HorseSearch} from '../../dto/horse';
 import {Owner} from '../../dto/owner';
-import {debounceTime, distinctUntilChanged, map, Subject} from 'rxjs';
-import {OwnerService} from '../../service/owner.service';
+import {debounceTime, distinctUntilChanged, Subject} from 'rxjs';
 
 @Component({
   selector: 'app-horse',
@@ -27,7 +26,6 @@ export class HorseComponent implements OnInit {
   constructor(
     private service: HorseService,
     private notification: ToastrService,
-    private ownerService: OwnerService,
 
   ) { }
 
@@ -93,12 +91,4 @@ export class HorseComponent implements OnInit {
       }
     });
   }
-  public formatOwnerName(owner: Owner | null | undefined): string {
-    return (owner == null)
-      ? ''
-      : `${owner.firstName} ${owner.lastName}`;
-  }
-
-  public ownerSuggestions = (input: string) => this.ownerService.searchByName(input, 5)
-    .pipe(map<Owner[], string[]>(owners => owners.map(owner => `${owner.firstName} ${owner.lastName}`)));
 }

@@ -89,28 +89,13 @@
     <label for="searchHorseOwner" class="col-form-label">
       Owner
     </label>
-
     <input id="searchHorseOwner" type="text" name="searchHorseOwner"
            class="form-control"
            [(ngModel)]="searchParams.owner"
            (input)="this.sub.next($event)"
     >
-
-    <!--
-        <app-autocomplete
-          id="searchHorseOwner"
-          name="searchHorseOwner"
-          class="col-md-10 col-lg-8"
-          textInputClass="form-control"
-          valueNeedsToMatchSuggestion="false"
-          [(ngModel)]="searchParams.owner"
-          [formatModel]="formatOwnerName"
-          [suggestions]="ownerSuggestions"
-          (input)="this.sub.next($event)"
-        ></app-autocomplete>
-    -->
-      </div>
-    </form>
+  </div>
+</form>
 
     <div class="mt-3">
       <table class="table table-hover">
